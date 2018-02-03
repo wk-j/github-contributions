@@ -1,0 +1,7 @@
+source https://www.nuget.org/api/v2
+framework:netstandard2.0
+nuget AngleSharp
+nuget FSharp.Core
+nuget FSharp.Data
+
+github rspeele/TaskBuilder.fs TaskBuilder.fs

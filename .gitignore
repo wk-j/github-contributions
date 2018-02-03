@@ -1,0 +1,6 @@
+.paket
+packages
+.DS_Store
+paket-files
+bin
+obj
