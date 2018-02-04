@@ -4,3 +4,5 @@ packages
 paket-files
 bin
 obj
+.gh-release.json
+publish
