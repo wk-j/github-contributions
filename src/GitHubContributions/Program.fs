@@ -64,20 +64,11 @@ let main argv =
             svg |> Seq.groupBy (fun x -> x.Date.DayOfWeek)
             |> Seq.toList
 
-        match days with
-        | [sun; mon; tue; wed; thu; fri; sat] ->
-            let show (day, rects) = 
-                let code = rects |> Seq.map (fun x -> toCode x.Fill) 
-                printfn "%10s  %s" (day.ToString()) (String.Join(" ", code))
+        let show (day, rects) = 
+            let code = rects |> Seq.map (fun x -> toCode x.Fill) 
+            printfn "%10s  %s" (day.ToString()) (String.Join(" ", code))
 
-            show sun
-            show mon
-            show tue
-            show wed
-            show thu
-            show fri
-            show sat
-        | _ -> ()
+        days |> List.map show |> ignore
     } 
     |> Async.AwaitTask
     |> Async.RunSynchronously
