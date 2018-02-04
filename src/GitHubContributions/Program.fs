@@ -1,11 +1,6 @@
-﻿// Learn more about F# at http://fsharp.org
-
-open System
+﻿open System
 open FSharp.Control.Tasks
 open AngleSharp
-open System.Threading.Tasks
-open System.Linq
-open System
 open System.Globalization
 
 type Rect = { 
@@ -13,12 +8,40 @@ type Rect = {
     Date: DateTime 
     Fill: string
 }
+
+let symbols = [
+    "🍼"
+    "🥤"
+    "☕️"
+    "🍺"
+    "🥂"
+    "◻️"
+    "📒"
+    "📙"
+    "📗"
+    "📕"
+    "📘"
+    "🔰"
+    "❔"
+    "💛"
+    "🧡"
+    "❤️"
+    "💙"
+]
+let toCode = function
+    | "#ebedf0" -> symbols.[0]
+    | "#c6e48b" -> symbols.[1]
+    | "#7bc96f" -> symbols.[2]
+    | "#239a3b" -> symbols.[3]
+    | "#196127" -> symbols.[4]
+    | _ -> "?"
+
 let loadSvgData user =
     let createRect (x: Dom.IElement) = 
         let en = CultureInfo("en-US")
-        let date = x.GetAttribute("data-date")
-        let count = x.GetAttribute("data-count")
-        let fill = x.GetAttribute("fill")
+        let date = x.GetAttribute "data-date"
+        let count = x.GetAttribute "data-count"
+        let fill = x.GetAttribute "fill"
 
         { Count = Int32.Parse count
           Date = DateTime.ParseExact(date, "yyyy-MM-dd", en)
@@ -28,17 +51,34 @@ let loadSvgData user =
         let address = sprintf "https://github.com/users/%s/contributions" user
         let config = Configuration.Default.WithDefaultLoader()
         let! document = BrowsingContext.New(config).OpenAsync(address) 
-        let svg = document.QuerySelectorAll("rect") |> Seq.map createRect
-        return svg
+        return 
+            document.QuerySelectorAll("rect") 
+            |> Seq.map createRect 
     }
 
 [<EntryPoint>]
 let main argv =
     task {
-        let! rs = loadSvgData "wk-j"
-        printfn "%A" rs
+        let! svg = loadSvgData argv.[0]
+        let days = 
+            svg |> Seq.groupBy (fun x -> x.Date.DayOfWeek)
+            |> Seq.toList
+
+        match days with
+        | [sun; mon; tue; wed; thu; fri; sat] ->
+            let show (day, days) = 
+                let code = days |> Seq.map (fun x -> toCode x.Fill) 
+                printfn "%10s  %s" (day.ToString()) (String.Join(" ", code))
+
+            show sun
+            show mon
+            show tue
+            show wed
+            show thu
+            show fri
+            show sat
+        | _ -> ()
     } 
     |> Async.AwaitTask
     |> Async.RunSynchronously
-    
-    0 // return an integer exit code
+    0 
