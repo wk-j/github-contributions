@@ -66,8 +66,8 @@ let main argv =
 
         match days with
         | [sun; mon; tue; wed; thu; fri; sat] ->
-            let show (day, days) = 
-                let code = days |> Seq.map (fun x -> toCode x.Fill) 
+            let show (day, rects) = 
+                let code = rects |> Seq.map (fun x -> toCode x.Fill) 
                 printfn "%10s  %s" (day.ToString()) (String.Join(" ", code))
 
             show sun
