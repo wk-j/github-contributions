@@ -12,7 +12,7 @@ Task("Publish")
 Task("Zip")
     .IsDependentOn("Publish")
     .Does(() => {
-        Zip($"publish/GitHubContributions", "publish/github-contributions.0.1.0.zip");
+        Zip($"publish/GitHubContributions", "publish/github-contributions.0.2.0.zip");
     });
 
 

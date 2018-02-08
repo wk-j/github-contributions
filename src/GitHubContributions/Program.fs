@@ -68,7 +68,9 @@ let main argv =
             let code = rects |> Seq.map (fun x -> toCode x.Fill) 
             printfn "%10s  %s" (day.ToString()) (String.Join(" ", code))
 
+        printfn "\n"
         days |> List.map show |> ignore
+        printfn "\n"
     } 
     |> Async.AwaitTask
     |> Async.RunSynchronously
